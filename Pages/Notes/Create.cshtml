@@ -1,0 +1,70 @@
+@page
+@model CreateModel
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-md-7 mx-auto">
+            <div class="card shadow-lg rounded-0">
+                <div class="card-header text-white bg-success rounded-0">
+                    <h4 class="text-lg-start">Create Note</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="Note.Title" class="form-label">Title</label>
+                            <input class="form-control" asp-for="Note.Title" placeholder="Enter a title for your note"/>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="Note.Title"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Note.Body" class="form-label">Body</label>
+                            <textarea asp-for="Note.Body" class="form-control" rows="3"
+                                placeholder="Enter note content">@Model.Note.Body</textarea>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="Note.Body"></span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Create</button>
+                        <a asp-page="Index" class="btn btn-info">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_Validation" />
+
+@functions {
+
+    public class CreateModel : PageModel
+    {
+        private DataContext _context;
+
+        public Note Note { get; set; } = new();
+
+        public CreateModel(DataContext context)
+        {
+            _context = context;
+        }
+
+        public void OnGet()
+        {
+            ViewData["Title"] = "Create Note";
+        }
+
+        public async Task<IActionResult> OnPostAsync([FromForm] Note note)
+        {
+            if (ModelState.IsValid)
+            {
+                note.NoteId = default;
+                _context.Notes.Add(note);
+                await _context.SaveChangesAsync();
+                return RedirectToPage(nameof(Index));
+            }
+            return Page();
+        }
+    }
+}

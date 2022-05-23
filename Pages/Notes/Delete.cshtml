@@ -1,0 +1,39 @@
+@page "{id:guid}"
+@model DeleteModel
+
+<partial name="_Details" model="Model.NoteViewModel" />
+
+@functions {
+
+    public class DeleteModel : PageModel
+    {
+        private DataContext _context;
+
+        public NoteViewModel? NoteViewModel { get; set; }
+
+        public DeleteModel(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task OnGetAsync(Guid id)
+        {
+            Note? note = await _context.Notes.FindAsync(id);
+            NoteViewModel = new()
+            {
+                Note = note,
+                Action = "Delete Note",
+                HasDeleteButton = true
+            };
+            ViewData["Title"] = "Delete Note";
+        }
+
+        public async Task<IActionResult> OnPostAsync([FromForm] Note note)
+        {
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+            return RedirectToPage(nameof(Index));
+        }
+    }
+
+}

@@ -1,0 +1,12 @@
+﻿@page
+@model IndexModel
+
+@functions {
+    public class IndexModel : PageModel
+    {
+        public IActionResult OnGet()
+        {
+            return Redirect("Notes/Index");
+        }
+    }
+}

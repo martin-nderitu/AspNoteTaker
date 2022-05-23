@@ -1,0 +1,52 @@
+@model NoteViewModel
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-md-7 mx-auto">
+            <div class="card shadow-lg rounded-0">
+                <div class="card-header text-white bg-success rounded-0">
+                    <h4 class="text-lg-start">@Model?.Action</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tbody>
+                        @if (Model?.Note is null)
+                        {
+                            <tr>
+                                <td colspan="2">Note not found</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th class="bg-success text-white">Title:</th>
+                                <td class="table-success">@Model.Note.Title</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-success text-white">Body:</th>
+                                <td class="table-success">@Model.Note.Body</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-success text-white">Date created:</th>
+                                <td class="table-success">@Model.Note.CreatedAt</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-success text-white">Last updated:</th>
+                                <td class="table-success">@Model.Note.UpdatedAt</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    <a asp-page="Index" class="btn btn-info">Back</a>
+                    @if ((Model?.HasDeleteButton is true) && (Model?.Note != null))
+                    {
+                        <form method="post">
+                            <input type="hidden" asp-for="@Model.Note.NoteId" />
+                            <button class="btn btn-danger mt-2" type="submit">Delete</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+@page "{id:guid?}"
+@model DetailModel
+
+<partial name="_Details" model="Model.NoteViewModel" />
+
+@functions {
+
+    public class DetailModel : PageModel
+    {
+        private DataContext _context;
+
+        public NoteViewModel? NoteViewModel { get; set; }
+
+        public DetailModel(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task OnGetAsync(Guid? id)
+        {
+            Note? note = await _context.Notes.FindAsync(id);
+            NoteViewModel = new()
+            {
+                Note = note,
+                Action = "Note Details"
+            };
+            ViewData["Title"] = "View Note";
+        }
+    }
+}

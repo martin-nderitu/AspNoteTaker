@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
+    <title>@ViewData["Title"]</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .input-validation-error {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-page="Index">Note Taker</a>
+        </div>
+    </nav>
+    @RenderBody()
+    <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

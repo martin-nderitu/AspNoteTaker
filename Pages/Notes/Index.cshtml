@@ -1,0 +1,74 @@
+@page
+@model IndexModel
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-md-7 mx-auto">
+            <div class="card shadow-lg rounded-0">
+                <div class="card-header text-white bg-success rounded-0">
+                    <h4 class="text-lg-start float-md-start">My Notes</h4>
+                    <a asp-page="Create" class="btn btn-primary float-md-end">Create</a>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Notes.Any())
+                    {
+                        <p>No notes found</p>
+                    }
+                    else
+                    {
+                        <div class="accordion accordion-flush" id="notes-accordion">
+                            @foreach (var note in Model.Notes)
+                            {
+                                <div class="accordion-item pb-2">
+                                    <h2 class="accordion-header" id="heading-@note.NoteId">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapse-@note.NoteId"
+                                                aria-expanded="false" aria-controls="collapse-@note.NoteId">
+                                            <p class="h5">@note.Title</p>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-@note.NoteId" class="accordion-collapse collapse"
+                                         aria-labelledby="heading-@note.NoteId" data-bs-parent="notes-accordion">
+                                        <div class="accordion-body">
+                                            <p>@note.Body</p>
+                                            <small class="text-muted">Last updated: @note.UpdatedAt</small>
+                                            <div class="pt-2 d-grid gap-2 d-md-block">
+                                                <a asp-page="Details" asp-route-id="@note.NoteId" class="btn btn-info btn-sm">View</a>
+                                                <a asp-page="Edit" asp-route-id="@note.NoteId" class="btn btn-warning btn-sm">Edit</a>
+                                                <a asp-page="Delete" asp-route-id="@note.NoteId" class="btn btn-danger btn-sm">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions {
+
+    public class IndexModel : PageModel
+    {
+        private DataContext _context;
+        
+        public IEnumerable<Note> Notes { get; set; } = Enumerable.Empty<Note>();
+
+        public IndexModel(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task OnGetAsync()
+        {
+            Notes = await _context.Notes
+                .OrderByDescending(note => note.CreatedAt)
+                .ToListAsync();
+            ViewData["Title"] = "Notes";
+        }
+    }
+}
